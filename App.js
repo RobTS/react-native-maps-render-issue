@@ -18,17 +18,29 @@ import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 
 const App: () => React$Node = () => {
   const setMapRef = useRef();
+  const setTracksViewRef = useRef();
+
   const [mapVisible, setMapVisible] = useState(true);
+  const [tracksViewChanges, setTracksViewChanges] = useState(true);
+
   setMapRef.current = setMapVisible;
+  setTracksViewRef.current = setTracksViewChanges;
+
   const onTemporaryRemove = () => {
     if (!mapVisible) {
       return;
     }
     setMapRef.current(false);
     setTimeout(() => {
+      setTracksViewRef.current(true);
       setMapRef.current(true);
     }, 2000);
   };
+
+  const asyncChange = () =>
+    setTimeout(() => {
+      setTracksViewRef.current(false);
+    }, 3000);
 
   return (
     <>
@@ -52,7 +64,8 @@ const App: () => React$Node = () => {
                 latitude: 37.806173,
                 longitude: -122.446875,
               }}
-              tracksViewChanges={false}
+              ref={asyncChange}
+              tracksViewChanges={tracksViewChanges}
             />
           </MapView>
         ) : (
